@@ -4,7 +4,7 @@ services:
     ports:
       - "3309:5000"
     environment:
-      - FLASK_APP=app.py
+      - FLASK_APP=run.py
       - FLASK_DEBUG=1
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://clase:uninorte1@db:3306/college_db
     volumes:

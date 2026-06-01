@@ -24,4 +24,4 @@ COPY . .
 EXPOSE 5000
 
 # [Inferencia] Se asume que el archivo principal de tu aplicación se llama app.py
-CMD ["uv", "run", "flask", "--app", "app.py", "run", "--host=0.0.0.0"]
+CMD ["uv", "run", "flask", "--app", "run.py", "run", "--host=0.0.0.0"]
