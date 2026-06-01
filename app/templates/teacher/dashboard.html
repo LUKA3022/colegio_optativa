@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block title %}Panel de Profesor - Gestión Escolar{%
+endblock %} {% block content %}
+<div class="dashboard-container">
+    <h2>Panel de Control - Profesor</h2>
+
+    <div class="dashboard-section">
+        <h3>Mis Materias</h3>
+        {% if subjects %}
+        <ul class="subject-list">
+            {% for subject in subjects %}
+            <li>
+                <strong>{{ subject.name }}</strong> (Curso: {{
+                subject.course.name }} - {{ subject.course.year }})
+                <a
+                    href="{{ url_for('teacher.create_assessment', subject_id=subject.id) }}"
+                    class="btn-small"
+                    >[+] Nueva Evaluación</a
+                >
+
+                {% if subject.assessments %}
+                <ul>
+                    {% for assessment in subject.assessments %}
+                    <li>
+                        {{ assessment.title }} ({{ assessment.type|capitalize
+                        }}) - Fecha: {{ assessment.scheduled_date }}
+                        <a
+                            href="{{ url_for('teacher.review_submissions', assessment_id=assessment.id) }}"
+                            >Revisar Entregas</a
+                        >
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No hay evaluaciones creadas para esta materia.</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No tienes materias asignadas.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

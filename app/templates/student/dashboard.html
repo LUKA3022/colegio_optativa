@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block title %}Panel de Estudiante - Gestión
+Escolar{% endblock %} {% block content %}
+<div class="dashboard-container">
+    <h2>Panel de Control - Estudiante</h2>
+
+    <div class="dashboard-section">
+        <h3>Mis Cursos y Evaluaciones</h3>
+        {% if subjects %}
+        <ul class="subject-list">
+            {% for subject in subjects %}
+            <li>
+                <strong>{{ subject.name }}</strong> (Curso: {{
+                subject.course.name }}) {% if subject.assessments %}
+                <ul>
+                    {% for assessment in subject.assessments %}
+                    <li>
+                        <strong>{{ assessment.title }}</strong> ({{
+                        assessment.type|capitalize }}) - Fecha: {{
+                        assessment.scheduled_date }} {% set ns =
+                        namespace(submitted=false, auto=0, final=None) %} {% for
+                        sub in current_user.submissions %} {% if
+                        sub.assessment_id == assessment.id %} {% set
+                        ns.submitted = true %} {% set ns.auto = sub.auto_score
+                        %} {% set ns.final = sub.final_score %} {% endif %} {%
+                        endfor %} {% if ns.submitted %}
+                        <span style="color: green">[Completado]</span>
+                        <span>Nota Automática: {{ ns.auto }}</span> |
+                        <span
+                            >Nota Final: {% if ns.final %}{{ ns.final }}{% else
+                            %}Pendiente de revisión{% endif %}</span
+                        >
+                        {% else %}
+                        <a
+                            href="{{ url_for('student.take_assessment', assessment_id=assessment.id) }}"
+                            class="btn-small"
+                            >Completar Evaluación</a
+                        >
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No hay evaluaciones programadas.</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No estás inscrito en ningún curso con materias asignadas.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

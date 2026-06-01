@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block title %}Iniciar Sesión - Gestión Escolar{%
+endblock %} {% block content %}
+<div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+{% endblock %}

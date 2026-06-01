@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}Sistema Escolar{% endblock %}</title>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='css/style.css') }}"
+        />
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="nav-brand">Gestión Escolar</div>
+                <ul class="nav-links">
+                    {% if current_user.is_authenticated %}
+                    <li>
+                        <span
+                            >Usuario: {{ current_user.username }} ({{
+                            current_user.role.name }})</span
+                        >
+                    </li>
+
+                    {% if current_user.role.name == 'profesor' %}
+                    <li>
+                        <a href="{{ url_for('teacher.dashboard') }}"
+                            >Panel Profesor</a
+                        >
+                    </li>
+                    {% elif current_user.role.name == 'estudiante' %}
+                    <li>
+                        <a href="{{ url_for('student.dashboard') }}"
+                            >Panel Estudiante</a
+                        >
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class="flash-messages">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                    <li class="alert alert-{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %} {% endwith %}
+            </section>
+
+            <section class="content">
+                {% block content %} {% endblock %}
+            </section>
+        </main>
+    </body>
+</html>
