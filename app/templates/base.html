@@ -10,59 +10,65 @@
         />
     </head>
     <body>
-        <header>
-            <nav>
-                <div class="nav-brand">Gestión Escolar</div>
-                <ul class="nav-links">
-                    {% if current_user.is_authenticated %}
-                    <li>
-                        <span
-                            >Usuario: {{ current_user.username }} ({{
-                            current_user.role.name }})</span
-                        >
-                    </li>
+        <nav class="sidebar">
+            <div class="sidebar-brand">Gestión Escolar</div>
+            <ul class="sidebar-links">
+                {% if current_user.is_authenticated %} {% if
+                current_user.role.name == 'profesor' %}
+                <li><a href="{{ url_for('teacher.dashboard') }}">Inicio</a></li>
+                <li>
+                    <a href="{{ url_for('teacher.subjects') }}"
+                        >Materias y Cursos</a
+                    >
+                </li>
+                <li>
+                    <a href="{{ url_for('teacher.assessments') }}"
+                        >Evaluaciones</a
+                    >
+                </li>
+                {% elif current_user.role.name == 'estudiante' %}
+                <li>
+                    <a href="{{ url_for('student.dashboard') }}"
+                        >Panel Estudiante</a
+                    >
+                </li>
+                {% endif %} {% else %}
+                <li>
+                    <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
 
-                    {% if current_user.role.name == 'profesor' %}
-                    <li>
-                        <a href="{{ url_for('teacher.dashboard') }}"
-                            >Panel Profesor</a
-                        >
-                    </li>
-                    {% elif current_user.role.name == 'estudiante' %}
-                    <li>
-                        <a href="{{ url_for('student.dashboard') }}"
-                            >Panel Estudiante</a
-                        >
-                    </li>
-                    {% endif %}
+        <div class="main-wrapper">
+            <header class="topbar">
+                {% if current_user.is_authenticated %}
+                <div class="user-info">
+                    <span>{{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="btn-logout"
+                        >Cerrar Sesión</a
+                    >
+                </div>
+                {% endif %}
+            </header>
 
-                    <li>
-                        <a href="{{ url_for('auth.logout') }}">Cerrar Sesión</a>
-                    </li>
-                    {% else %}
-                    <li>
-                        <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </header>
+            <main class="content">
+                <section class="flash-messages">
+                    {% with messages =
+                    get_flashed_messages(with_categories=true) %} {% if messages
+                    %}
+                    <ul>
+                        {% for category, message in messages %}
+                        <li class="alert alert-{{ category }}">
+                            {{ message }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %} {% endwith %}
+                </section>
 
-        <main>
-            <section class="flash-messages">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                <ul>
-                    {% for category, message in messages %}
-                    <li class="alert alert-{{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %} {% endwith %}
-            </section>
-
-            <section class="content">
                 {% block content %} {% endblock %}
-            </section>
-        </main>
+            </main>
+        </div>
     </body>
 </html>

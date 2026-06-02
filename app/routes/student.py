@@ -16,8 +16,6 @@ def check_student():
 @login_required
 def dashboard():
     check_student()
-
-    # Extraer cursos donde el estudiante está inscrito mediante join con la tabla intermedia
     courses = (
         db.session.query(Course)
         .join(student_course)
@@ -28,10 +26,21 @@ def dashboard():
 
     if course_ids:
         subjects = Subject.query.filter(Subject.course_id.in_(course_ids)).all()
-    else:
-        subjects = []
+        subject_ids = [s.id for s in subjects]
 
-    return render_template("student/dashboard.html", subjects=subjects, courses=courses)
+        # Extraer evaluaciones ordenadas por fecha ascendente
+        if subject_ids:
+            assessments = (
+                Assessment.query.filter(Assessment.subject_id.in_(subject_ids))
+                .order_by(Assessment.scheduled_date.asc())
+                .all()
+            )
+        else:
+            assessments = []
+    else:
+        assessments = []
+
+    return render_template("student/dashboard.html", assessments=assessments)
 
 
 @student_bp.route("/assessment/<int:assessment_id>", methods=["GET", "POST"])

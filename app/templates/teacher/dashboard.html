@@ -1,44 +1,71 @@
-{% extends "base.html" %} {% block title %}Panel de Profesor - Gestión Escolar{%
-endblock %} {% block content %}
-<div class="dashboard-container">
-    <h2>Panel de Control - Profesor</h2>
+{% extends "base.html" %} {% block title %}Inicio - Profesor{% endblock %} {%
+block content %}
+<div class="dashboard-container" style="max-width: 1000px">
+    <div
+        style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eaedf1;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        "
+    >
+        <h2 style="margin: 0">Cronograma de Evaluaciones</h2>
+        <div>
+            <a href="{{ url_for('teacher.create_course') }}" class="btn-small"
+                >Crear Curso</a
+            >
+            <a
+                href="{{ url_for('teacher.create_subject') }}"
+                class="btn-small"
+                style="background-color: #28a745"
+                >Crear Materia</a
+            >
+            <a
+                href="{{ url_for('teacher.subjects') }}"
+                class="btn-small"
+                style="background-color: #17a2b8"
+                >Ver Materias (Nueva Evaluación)</a
+            >
+        </div>
+    </div>
 
-    <div class="dashboard-section">
-        <h3>Mis Materias</h3>
-        {% if subjects %}
-        <ul class="subject-list">
-            {% for subject in subjects %}
-            <li>
-                <strong>{{ subject.name }}</strong> (Curso: {{
-                subject.course.name }} - {{ subject.course.year }})
-                <a
-                    href="{{ url_for('teacher.create_assessment', subject_id=subject.id) }}"
-                    class="btn-small"
-                    >[+] Nueva Evaluación</a
+    <div class="card-grid">
+        {% for assessment in assessments %}
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ assessment.title }}</h3>
+                <span
+                    class="badge {% if assessment.type == 'exam' %}badge-exam{% else %}badge-project{% endif %}"
                 >
-
-                {% if subject.assessments %}
-                <ul>
-                    {% for assessment in subject.assessments %}
-                    <li>
-                        {{ assessment.title }} ({{ assessment.type|capitalize
-                        }}) - Fecha: {{ assessment.scheduled_date }}
-                        <a
-                            href="{{ url_for('teacher.review_submissions', assessment_id=assessment.id) }}"
-                            >Revisar Entregas</a
-                        >
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p>No hay evaluaciones creadas para esta materia.</p>
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+                    {{ assessment.type }}
+                </span>
+            </div>
+            <div class="card-body">
+                <p><strong>Materia:</strong> {{ assessment.subject.name }}</p>
+                <p>
+                    <strong>Fecha:</strong> {{
+                    assessment.scheduled_date.strftime('%Y-%m-%d %H:%M') }}
+                </p>
+            </div>
+            <div class="card-footer">
+                <a
+                    href="{{ url_for('teacher.edit_assessment', assessment_id=assessment.id) }}"
+                    class="btn-small"
+                    style="background-color: #ffc107; color: black"
+                    >Editar</a
+                >
+                <a
+                    href="{{ url_for('teacher.review_submissions', assessment_id=assessment.id) }}"
+                    class="btn-small"
+                    >Ver Entregas</a
+                >
+            </div>
+        </div>
         {% else %}
-        <p>No tienes materias asignadas.</p>
-        {% endif %}
+        <p style="grid-column: 1 / -1">No hay evaluaciones programadas.</p>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

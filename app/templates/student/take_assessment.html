@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block title %}Completar Evaluación - Gestión
+Escolar{% endblock %} {% block content %}
+<div class="form-container" style="max-width: 600px; margin: 0 auto">
+    <h2>{{ assessment.title }}</h2>
+    <p>
+        <strong>Materia:</strong> {{ assessment.subject.name }} |
+        <strong>Tipo:</strong> {{ assessment.type|capitalize }}
+    </p>
+    <hr />
+
+    <form
+        method="POST"
+        action="{{ url_for('student.take_assessment', assessment_id=assessment.id) }}"
+    >
+        {% for item in assessment.items %}
+        <div style="margin-bottom: 20px">
+            <p>
+                <strong>{{ loop.index }}. {{ item.content }}</strong>
+                <em>(Puntos: {{ item.points }})</em>
+            </p>
+
+            <label for="item_{{ item.id }}">Tu respuesta:</label>
+            {% if assessment.type == 'exam' %}
+            <input
+                type="text"
+                id="item_{{ item.id }}"
+                name="item_{{ item.id }}"
+                required
+                style="width: 100%; padding: 8px"
+            />
+            {% else %}
+            <textarea
+                id="item_{{ item.id }}"
+                name="item_{{ item.id }}"
+                rows="5"
+                required
+                style="width: 100%; padding: 8px"
+            ></textarea>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <button
+            type="submit"
+            style="width: 100%; padding: 10px; margin-top: 10px"
+        >
+            Enviar Evaluación
+        </button>
+    </form>
+</div>
+{% endblock %}

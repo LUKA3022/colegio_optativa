@@ -1,53 +1,58 @@
 {% extends "base.html" %} {% block title %}Panel de Estudiante - Gestión
 Escolar{% endblock %} {% block content %}
-<div class="dashboard-container">
-    <h2>Panel de Control - Estudiante</h2>
+<div class="dashboard-container" style="max-width: 1000px">
+    <h2>Próximas Actividades</h2>
 
-    <div class="dashboard-section">
-        <h3>Mis Cursos y Evaluaciones</h3>
-        {% if subjects %}
-        <ul class="subject-list">
-            {% for subject in subjects %}
-            <li>
-                <strong>{{ subject.name }}</strong> (Curso: {{
-                subject.course.name }}) {% if subject.assessments %}
-                <ul>
-                    {% for assessment in subject.assessments %}
-                    <li>
-                        <strong>{{ assessment.title }}</strong> ({{
-                        assessment.type|capitalize }}) - Fecha: {{
-                        assessment.scheduled_date }} {% set ns =
-                        namespace(submitted=false, auto=0, final=None) %} {% for
-                        sub in current_user.submissions %} {% if
-                        sub.assessment_id == assessment.id %} {% set
-                        ns.submitted = true %} {% set ns.auto = sub.auto_score
-                        %} {% set ns.final = sub.final_score %} {% endif %} {%
-                        endfor %} {% if ns.submitted %}
-                        <span style="color: green">[Completado]</span>
-                        <span>Nota Automática: {{ ns.auto }}</span> |
-                        <span
-                            >Nota Final: {% if ns.final %}{{ ns.final }}{% else
-                            %}Pendiente de revisión{% endif %}</span
-                        >
-                        {% else %}
-                        <a
-                            href="{{ url_for('student.take_assessment', assessment_id=assessment.id) }}"
-                            class="btn-small"
-                            >Completar Evaluación</a
-                        >
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p>No hay evaluaciones programadas.</p>
+    <div class="card-grid">
+        {% for assessment in assessments %} {% set ns =
+        namespace(submitted=false, auto=0, final=None) %} {% for sub in
+        current_user.submissions %} {% if sub.assessment_id == assessment.id %}
+        {% set ns.submitted = true %} {% set ns.auto = sub.auto_score %} {% set
+        ns.final = sub.final_score %} {% endif %} {% endfor %}
+
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ assessment.title }}</h3>
+                <span
+                    class="badge {% if ns.submitted %}badge-completed{% else %}badge-pending{% endif %}"
+                >
+                    {% if ns.submitted %}Listo{% else %}Pendiente{% endif %}
+                </span>
+            </div>
+            <div class="card-body">
+                <p><strong>Materia:</strong> {{ assessment.subject.name }}</p>
+                <p><strong>Tipo:</strong> {{ assessment.type|capitalize }}</p>
+                <p>
+                    <strong>Fecha límite:</strong> {{
+                    assessment.scheduled_date.strftime('%Y-%m-%d %H:%M') }}
+                </p>
+
+                {% if ns.submitted %}
+                <p>
+                    <strong>Calificación:</strong> {% if ns.final != None %}{{
+                    ns.final }}{% else %}{{ ns.auto }} (Auto){% endif %}
+                </p>
                 {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+            </div>
+            <div class="card-footer">
+                {% if not ns.submitted %}
+                <a
+                    href="{{ url_for('student.take_assessment', assessment_id=assessment.id) }}"
+                    class="btn-small"
+                    >Completar</a
+                >
+                {% else %}
+                <span style="color: #676879; font-size: 13px; font-weight: bold"
+                    >Enviado</span
+                >
+                {% endif %}
+            </div>
+        </div>
         {% else %}
-        <p>No estás inscrito en ningún curso con materias asignadas.</p>
-        {% endif %}
+        <p style="grid-column: 1 / -1">
+            No tienes actividades asignadas actualmente.
+        </p>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

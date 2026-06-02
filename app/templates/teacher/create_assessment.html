@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block title %}Nueva Evaluación - Gestión Escolar{%
+endblock %} {% block content %}
+<div class="form-container">
+    <h2>Crear Evaluación para: {{ subject.name }}</h2>
+    <form
+        method="POST"
+        action="{{ url_for('teacher.create_assessment', subject_id=subject.id) }}"
+    >
+        <label for="title">Título de la Evaluación:</label>
+        <input type="text" id="title" name="title" required />
+
+        <label for="type">Tipo de Evaluación:</label>
+        <select id="type" name="type" required>
+            <option value="exam">Examen (Autocorrección)</option>
+            <option value="project">Proyecto (Revisión Manual)</option>
+        </select>
+
+        <label for="scheduled_date">Fecha Programada:</label>
+        <input
+            type="datetime-local"
+            id="scheduled_date"
+            name="scheduled_date"
+            required
+        />
+
+        <hr />
+        <h3>Agregar Ítem Inicial</h3>
+        <label for="item_content">Contenido (Pregunta o Requisito):</label>
+        <textarea
+            id="item_content"
+            name="item_content"
+            rows="3"
+            required
+        ></textarea>
+
+        <label for="item_expected"
+            >Respuesta Esperada (Opcional, para exámenes de respuesta
+            exacta):</label
+        >
+        <input type="text" id="item_expected" name="item_expected" />
+
+        <button type="submit" style="margin-top: 15px">
+            Guardar Evaluación
+        </button>
+    </form>
+</div>
+{% endblock %}
