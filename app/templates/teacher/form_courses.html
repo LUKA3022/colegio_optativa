@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %}{% if course %}Editar{% else
+%}Nuevo{% endif %} Curso{% endblock %} {% block content %}
+<div class="form-container">
+    <h2>{% if course %}Editar Curso{% else %}Crear Nuevo Curso{% endif %}</h2>
+    <form method="POST">
+        <label for="name">Nombre del Curso:</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            value="{{ course.name if course else '' }}"
+            required
+        />
+
+        <label for="year">Año:</label>
+        <input
+            type="number"
+            id="year"
+            name="year"
+            value="{{ course.year if course else '' }}"
+            required
+            style="
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            "
+        />
+
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+{% endblock %}

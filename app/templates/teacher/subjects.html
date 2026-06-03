@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block title %}Mis Materias - Profesor{% endblock %}
+{% block content %}
+<div class="dashboard-container">
+    <h2>Materias y Cursos</h2>
+
+    {% if subjects %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px">
+        <thead>
+            <tr style="background-color: #f4f6f9; text-align: left">
+                <th style="padding: 10px; border-bottom: 2px solid #ccc">
+                    Materia
+                </th>
+                <th style="padding: 10px; border-bottom: 2px solid #ccc">
+                    Curso
+                </th>
+                <th style="padding: 10px; border-bottom: 2px solid #ccc">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <td style="padding: 10px; border-bottom: 1px solid #eee">
+                <a
+                    href="{{ url_for('teacher.edit_course', course_id=subject.course.id) }}"
+                    class="btn-small"
+                    style="background-color: #6c757d"
+                    >Editar Curso</a
+                >
+                <a
+                    href="{{ url_for('teacher.edit_subject', subject_id=subject.id) }}"
+                    class="btn-small"
+                    style="background-color: #ffc107; color: black"
+                    >Editar Materia</a
+                >
+                <a
+                    href="{{ url_for('teacher.create_assessment', subject_id=subject.id) }}"
+                    class="btn-small"
+                    >Nueva Evaluación</a
+                >
+            </td>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No tienes materias asignadas actualmente.</p>
+    {% endif %}
+</div>
+{% endblock %}

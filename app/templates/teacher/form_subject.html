@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block title %}{% if subject %}Editar{% else
+%}Nueva{% endif %} Materia{% endblock %} {% block content %}
+<div class="form-container">
+    <h2>
+        {% if subject %}Editar Materia{% else %}Crear Nueva Materia{% endif %}
+    </h2>
+    <form method="POST">
+        <label for="name">Nombre de la Materia:</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            value="{{ subject.name if subject else '' }}"
+            required
+        />
+
+        <label for="course_id">Asignar a Curso:</label>
+        <select id="course_id" name="course_id" required>
+            {% for course in courses %}
+            <option
+                value="{{ course.id }}"
+                {%
+                if
+                subject
+                and
+                subject.course_id=""
+                ="course.id"
+                %}selected{%
+                endif
+                %}
+            >
+                {{ course.name }} ({{ course.year }})
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+{% endblock %}

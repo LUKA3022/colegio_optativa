@@ -1,0 +1,55 @@
+{% extends "base.html" %} {% block title %}Editar Evaluación{% endblock %} {%
+block content %}
+<div class="form-container">
+    <h2>Editar Evaluación: {{ assessment.title }}</h2>
+    <form method="POST">
+        <label for="title">Título:</label>
+        <input
+            type="text"
+            id="title"
+            name="title"
+            value="{{ assessment.title }}"
+            required
+        />
+
+        <label for="type">Tipo:</label>
+        <select id="type" name="type" required>
+            <option
+                value="exam"
+                {%
+                if
+                assessment.type=""
+                ="exam"
+                %}selected{%
+                endif
+                %}
+            >
+                Examen
+            </option>
+            <option
+                value="project"
+                {%
+                if
+                assessment.type=""
+                ="project"
+                %}selected{%
+                endif
+                %}
+            >
+                Proyecto
+            </option>
+        </select>
+
+        <label for="scheduled_date">Fecha Programada:</label>
+        <input
+            type="datetime-local"
+            id="scheduled_date"
+            name="scheduled_date"
+            value="{{ assessment.scheduled_date.strftime('%Y-%m-%dT%H:%M') }}"
+            required
+        />
+
+        <button type="submit">Actualizar Evaluación</button>
+    </form>
+</div>
+{% endblock %}
